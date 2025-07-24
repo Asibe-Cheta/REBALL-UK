@@ -1,0 +1,154 @@
+// This is your Prisma schema file for REBALL Football Training Platform
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Users table (extends Supabase auth.users)
+model User {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email     String   @unique
+  name      String?
+  image     String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  profile   Profile?
+  bookings  Booking[]
+  progress  Progress[]
+  videos    Video[]
+  certificates Certificate[]
+}
+
+// Profiles table (REBALL-specific user data)
+model Profile {
+  id                    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId                String    @unique @map("user_id") @db.Uuid
+  playerName            String?   @map("player_name")
+  dateOfBirth           DateTime? @map("date_of_birth") @db.Date
+  position              String?
+  playingLevel          String?   @map("playing_level")
+  currentTeam           String?   @map("current_team")
+  contactEmail          String?   @map("contact_email")
+  contactNumber         String?   @map("contact_number")
+  postcode              String?
+  guardianName          String?   @map("guardian_name")
+  medicalConditions     String?   @map("medical_conditions")
+  trainingReason        String?   @map("training_reason")
+  hearAbout             String?   @map("hear_about")
+  referralName          String?   @map("referral_name")
+  postTrainingSnacks    String?   @map("post_training_snacks")
+  postTrainingDrinks    String?   @map("post_training_drinks")
+  socialMediaConsent    Boolean   @default(false) @map("social_media_consent")
+  marketingConsent      Boolean   @default(false) @map("marketing_consent")
+  evidenceFiles         String[]  @map("evidence_files")
+  welcomeCompleted      Boolean   @default(false) @map("welcome_completed")
+  welcomeCompletedDate  DateTime? @map("welcome_completed_date") @db.Timestamptz(6)
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Courses table
+model Course {
+  id            String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name          String
+  description   String?
+  position      String
+  type          String?
+  durationWeeks Int      @default(8) @map("duration_weeks")
+  price121      Decimal? @map("price_121") @db.Decimal(10, 2)
+  priceGroup    Decimal? @map("price_group") @db.Decimal(10, 2)
+  available     Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  bookings      Booking[]
+  progress      Progress[]
+  certificates  Certificate[]
+}
+
+// Bookings table
+model Booking {
+  id                      String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId                  String    @map("user_id") @db.Uuid
+  courseId                String    @map("course_id") @db.Uuid
+  trainingType            String    @map("training_type")
+  packageType             String    @map("package_type")
+  totalPrice              Decimal   @map("total_price") @db.Decimal(10, 2)
+  status                  String    @default("pending")
+  availability            Json?     @db.JsonB
+  consultationAvailability Json?    @map("consultation_availability") @db.JsonB
+  courseQuestions         Json?     @map("course_questions") @db.JsonB
+  googleCalendarConnected Boolean   @default(false) @map("google_calendar_connected")
+  bookingDate             DateTime  @default(now()) @map("booking_date") @db.Timestamptz(6)
+  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course  Course   @relation(fields: [courseId], references: [id])
+  videos  Video[]
+}
+
+// Progress table
+model Progress {
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  courseId       String   @map("course_id") @db.Uuid
+  scenario       String
+  confidenceBefore Int?   @map("confidence_before")
+  confidenceAfter  Int?   @map("confidence_after")
+  sessionNumber   Int?    @map("session_number")
+  feedback        String?
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id])
+}
+
+// Videos table
+model Video {
+  id            String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId        String   @map("user_id") @db.Uuid
+  bookingId     String?  @map("booking_id") @db.Uuid
+  title         String
+  type          String
+  url           String
+  thumbnail     String?
+  duration      Int?
+  sessionNumber Int?     @map("session_number")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  booking Booking? @relation(fields: [bookingId], references: [id])
+}
+
+// Certificates table
+model Certificate {
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  courseId       String   @map("course_id") @db.Uuid
+  certificateUrl String?  @map("certificate_url")
+  issuedDate     DateTime @default(now()) @map("issued_date") @db.Timestamptz(6)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id])
+}
