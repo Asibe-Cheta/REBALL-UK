@@ -15,8 +15,17 @@ datasource db {
 model User {
   id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   email     String   @unique
+  password  String?
+  firstName String?  @map("first_name")
+  lastName  String?  @map("last_name")
   name      String?
   image     String?
+  emailVerified Boolean @default(false) @map("email_verified")
+  verificationToken String? @map("verification_token")
+  verificationExpires DateTime? @map("verification_expires") @db.Timestamptz(6)
+  googleCalendarToken String? @map("google_calendar_token")
+  googleCalendarRefreshToken String? @map("google_calendar_refresh_token")
+  googleCalendarTokenExpiry DateTime? @map("google_calendar_token_expiry") @db.Timestamptz(6)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
@@ -92,6 +101,12 @@ model Booking {
   consultationAvailability Json?    @map("consultation_availability") @db.JsonB
   courseQuestions         Json?     @map("course_questions") @db.JsonB
   googleCalendarConnected Boolean   @default(false) @map("google_calendar_connected")
+  googleCalendarEventId   String?   @map("google_calendar_event_id")
+  paymentIntentId         String?   @map("payment_intent_id")
+  paymentAmount           Decimal?  @map("payment_amount") @db.Decimal(10, 2)
+  paymentCurrency         String?   @map("payment_currency")
+  paymentStatus           String?   @map("payment_status")
+  receiptUrl              String?   @map("receipt_url")
   bookingDate             DateTime  @default(now()) @map("booking_date") @db.Timestamptz(6)
   createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt               DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -131,6 +146,11 @@ model Video {
   thumbnail     String?
   duration      Int?
   sessionNumber Int?     @map("session_number")
+  description   String?
+  status        String   @default("processing")
+  watchTime     Int?     @map("watch_time")
+  completionRate Int?    @map("completion_rate")
+  replayCount   Int?     @map("replay_count")
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
