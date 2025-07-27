@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /dashboard/
+Disallow: /coach/
+Disallow: /auth/
+
+# Allow important pages
+Allow: /
+Allow: /about
+Allow: /pricing
+Allow: /contact
+Allow: /courses
+
+# Sitemap
+Sitemap: https://reball.uk/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1 

@@ -1,13 +1,43 @@
 import Link from "next/link";
+import Image from "next/image";
 import Navigation from "@/components/ui/Navigation";
 import AuthTest from "@/components/auth/AuthTest";
 import Footer from "@/components/ui/Footer";
 import VideoPlaceholder from "@/components/ui/VideoPlaceholder";
 import VideoPlayer from "@/components/ui/VideoPlayer";
+import SEO from "@/components/SEO";
+import { structuredDataSchemas } from "@/components/SEO";
 
 export default function Home() {
+  // Structured data for the homepage
+  const homepageStructuredData = [
+    structuredDataSchemas.organization,
+    structuredDataSchemas.localBusiness,
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "REBALL UK",
+      "url": "https://reball.uk",
+      "description": "Professional football 1v1 training and player development",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://reball.uk/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ];
+
   return (
     <>
+      <SEO
+        title="REBALL - Football 1v1 Training | Improve Your Game Success"
+        description="Transform your football game with REBALL's proven 1v1 training methodology. Learn specific tactical, movement and technical skills to instantly increase your success in game scenarios. Professional coaching from Premier League experience."
+        keywords="football training, 1v1 training, REBALL, football coaching, player development, football skills, Devon football training, professional football coaching"
+        canonical="/"
+        ogImage="/images/reball-logo-black.png"
+        structuredData={homepageStructuredData}
+      />
+
       <Navigation />
 
                   {/* Fresh Hero Section */}
@@ -101,7 +131,7 @@ export default function Home() {
                 </div>
                 <div className="flex-shrink-0 w-32 h-16 bg-white rounded-lg shadow-lg flex items-center justify-center border">
                   <div className="text-center">
-                    <div className="text-2xl mb-1">🇩🇪</div>
+                    <div className="text-2xl mb-1">⚽</div>
                     <span className="text-black font-bold text-xs">Bundesliga</span>
                   </div>
                 </div>
@@ -113,8 +143,8 @@ export default function Home() {
                 </div>
                 <div className="flex-shrink-0 w-32 h-16 bg-white rounded-lg shadow-lg flex items-center justify-center border">
                   <div className="text-center">
-                    <div className="text-2xl mb-1">🇫🇷</div>
-                    <span className="text-black font-bold text-xs">Ligue 1</span>
+                    <div className="text-2xl mb-1">🏆</div>
+                    <span className="text-black font-bold text-xs">World Cup</span>
                   </div>
                 </div>
               </div>
@@ -153,7 +183,7 @@ export default function Home() {
                 </div>
                 <div className="flex-shrink-0 w-32 h-16 bg-white rounded-lg shadow-lg flex items-center justify-center border">
                   <div className="text-center">
-                    <div className="text-2xl mb-1">🇩🇪</div>
+                    <div className="text-2xl mb-1">⚽</div>
                     <span className="text-black font-bold text-xs">Bundesliga</span>
                   </div>
                 </div>
@@ -165,8 +195,8 @@ export default function Home() {
                 </div>
                 <div className="flex-shrink-0 w-32 h-16 bg-white rounded-lg shadow-lg flex items-center justify-center border">
                   <div className="text-center">
-                    <div className="text-2xl mb-1">🇫🇷</div>
-                    <span className="text-black font-bold text-xs">Ligue 1</span>
+                    <div className="text-2xl mb-1">🏆</div>
+                    <span className="text-black font-bold text-xs">World Cup</span>
                   </div>
                 </div>
               </div>

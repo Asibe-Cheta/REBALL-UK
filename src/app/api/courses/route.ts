@@ -1,42 +1,34 @@
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const position = searchParams.get("position");
+    const session = await getServerSession(authOptions);
 
-    // Fetch all available courses
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Get all available courses
     const courses = await prisma.course.findMany({
       where: {
-        available: true,
-        ...(position && { position }),
+        available: true
       },
       orderBy: {
-        name: "asc",
-      },
+        name: 'asc'
+      }
     });
 
-    // Format the response
-    const formattedCourses = courses.map(course => ({
-      id: course.id,
-      name: course.name,
-      description: course.description || "",
-      position: course.position,
-      durationWeeks: course.durationWeeks,
-      price121: course.price121?.toNumber() || 0,
-      priceGroup: course.priceGroup?.toNumber() || 0,
-      available: course.available,
-    }));
-
-    return NextResponse.json(formattedCourses);
+    return NextResponse.json({
+      courses: courses
+    });
 
   } catch (error) {
-    console.error("Courses fetch error:", error);
+    console.error('Error fetching courses:', error);
     return NextResponse.json(
-      { message: "Internal server error" },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
