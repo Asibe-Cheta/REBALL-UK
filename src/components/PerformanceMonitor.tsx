@@ -17,30 +17,30 @@ export default function PerformanceMonitor() {
 
     // Track Core Web Vitals
     const trackWebVitals = () => {
-      if ('web-vital' in window) {
+      if ('web-vitals' in window) {
         // @ts-ignore
-        import('web-vital').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+        import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
           getCLS((metric: any) => {
             console.log('CLS:', metric.value);
             // Send to analytics
             sendMetric('CLS', metric.value);
           });
-          
+
           getFID((metric: any) => {
             console.log('FID:', metric.value);
             sendMetric('FID', metric.value);
           });
-          
+
           getFCP((metric: any) => {
             console.log('FCP:', metric.value);
             sendMetric('FCP', metric.value);
           });
-          
+
           getLCP((metric: any) => {
             console.log('LCP:', metric.value);
             sendMetric('LCP', metric.value);
           });
-          
+
           getTTFB((metric: any) => {
             console.log('TTFB:', metric.value);
             sendMetric('TTFB', metric.value);
@@ -60,7 +60,7 @@ export default function PerformanceMonitor() {
             loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
             totalLoadTime: navigation.loadEventEnd - navigation.fetchStart
           };
-          
+
           console.log('Page Load Metrics:', metrics);
           sendMetrics('page_load', metrics);
         }
@@ -75,7 +75,7 @@ export default function PerformanceMonitor() {
       const trackInteraction = () => {
         interactionCount++;
         lastInteraction = Date.now();
-        
+
         // Send interaction data every 10 interactions
         if (interactionCount % 10 === 0) {
           sendMetrics('user_interactions', {
@@ -90,7 +90,7 @@ export default function PerformanceMonitor() {
       document.addEventListener('click', trackInteraction);
       document.addEventListener('scroll', trackInteraction);
       document.addEventListener('submit', trackInteraction);
-      
+
       return () => {
         document.removeEventListener('click', trackInteraction);
         document.removeEventListener('scroll', trackInteraction);
@@ -120,9 +120,9 @@ export default function PerformanceMonitor() {
             }
           });
         });
-        
+
         observer.observe({ entryTypes: ['resource'] });
-        
+
         return () => observer.disconnect();
       }
     };
@@ -150,7 +150,7 @@ export default function PerformanceMonitor() {
 
       window.addEventListener('error', handleError);
       window.addEventListener('unhandledrejection', handleUnhandledRejection);
-      
+
       return () => {
         window.removeEventListener('error', handleError);
         window.removeEventListener('unhandledrejection', handleUnhandledRejection);
@@ -161,7 +161,7 @@ export default function PerformanceMonitor() {
     const sendMetric = (name: string, value: number) => {
       // In a real implementation, this would send to your analytics service
       console.log(`Metric: ${name} = ${value}`);
-      
+
       // Example: Send to Vercel Analytics
       if (typeof window !== 'undefined' && 'va' in window) {
         // @ts-ignore
@@ -172,7 +172,7 @@ export default function PerformanceMonitor() {
     const sendMetrics = (type: string, data: any) => {
       // In a real implementation, this would send to your analytics service
       console.log(`Metrics: ${type}`, data);
-      
+
       // Example: Send to Vercel Analytics
       if (typeof window !== 'undefined' && 'va' in window) {
         // @ts-ignore

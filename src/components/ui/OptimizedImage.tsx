@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { Skeleton } from 'lucide-react';
+
 
 interface OptimizedImageProps {
   src: string;
@@ -38,7 +38,7 @@ export default function OptimizedImage({
         className={`bg-gray-200 flex items-center justify-center ${className}`}
         style={{ width, height }}
       >
-        <Skeleton className="w-8 h-8 text-gray-400" />
+        <div className="w-8 h-8 bg-gray-200 rounded animate-pulse" />
       </div>
     );
   }

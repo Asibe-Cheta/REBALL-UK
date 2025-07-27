@@ -1,6 +1,6 @@
 'use client';
 
-import { Loader2, Skeleton } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg';
@@ -57,16 +57,16 @@ export const SkeletonCard = ({ className = '' }: SkeletonCardProps) => {
   return (
     <div className={`bg-white rounded-lg shadow-sm p-6 ${className}`}>
       <div className="flex items-center space-x-4 mb-4">
-        <Skeleton className="w-12 h-12 rounded-full" />
+        <div className="w-12 h-12 rounded-full bg-gray-200 animate-pulse" />
         <div className="flex-1">
-          <Skeleton className="h-4 w-3/4 mb-2" />
-          <Skeleton className="h-3 w-1/2" />
+          <div className="h-4 w-3/4 mb-2 bg-gray-200 rounded animate-pulse" />
+          <div className="h-3 w-1/2 bg-gray-200 rounded animate-pulse" />
         </div>
       </div>
       <div className="space-y-3">
-        <Skeleton className="h-3 w-full" />
-        <Skeleton className="h-3 w-5/6" />
-        <Skeleton className="h-3 w-4/6" />
+        <div className="h-3 w-full bg-gray-200 rounded animate-pulse" />
+        <div className="h-3 w-5/6 bg-gray-200 rounded animate-pulse" />
+        <div className="h-3 w-4/6 bg-gray-200 rounded animate-pulse" />
       </div>
     </div>
   );
