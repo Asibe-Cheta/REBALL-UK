@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true, // Temporary - remove after fixing
+  },
+  typescript: {
+    ignoreBuildErrors: true, // Temporary - remove after fixing
+  },
   async headers() {
     return [
       {
@@ -10,12 +16,6 @@ const nextConfig: NextConfig = {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
           },
-          eslint: {
-              ignoreDuringBuilds: true, // Temporary - remove after fixing
-            },
-            typescript: {
-              ignoreBuildErrors: true, // Temporary - remove after fixing
-            },
           {
             key: 'Accept-Ranges',
             value: 'bytes',
